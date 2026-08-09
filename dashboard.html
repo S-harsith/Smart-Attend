@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Dashboard - Campus Attendance</title>
+    <style>
+        /* Global Styles */
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 0; }
+        
+        /* Navigation Bar */
+        .navbar { background-color: #2c3e50; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .navbar h1 { margin: 0; font-size: 20px; letter-spacing: 1px; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; font-size: 14px; padding: 8px 12px; border-radius: 4px; transition: 0.3s; }
+        .nav-links a:hover { background-color: #34495e; }
+        .nav-links .logout { background-color: #e74c3c; }
+        .nav-links .logout:hover { background-color: #c0392b; }
+
+        /* Main Container */
+        .container { max-width: 900px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .header-section { text-align: center; margin-bottom: 30px; }
+        .header-section h2 { color: #333; margin-bottom: 5px; }
+        .header-section p { color: #7f8c8d; font-size: 14px; }
+
+        /* Scanner Button */
+        .scan-btn-container { text-align: center; margin-bottom: 30px; }
+        .btn-scan { background-color: #2ecc71; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-size: 18px; font-weight: bold; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; border: none; cursor: pointer; }
+        .btn-scan:hover { background-color: #27ae60; transform: translateY(-2px); }
+
+        /* Table Styles */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #3498db; color: white; font-weight: bold; }
+        tr:hover { background-color: #f1f2f6; }
+        .status-present { color: #27ae60; font-weight: bold; }
+        .status-absent { color: #e74c3c; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <h1>🎓 Campus Host Portal</h1>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/manage">Manage Students</a>
+            <a href="/logout" class="logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="header-section">
+            <h2>Live Campus Attendance</h2>
+            <p>Records for: <strong>{{ today_date }}</strong></p>
+        </div>
+
+        <div class="scan-btn-container">
+            <a href="/start_scanner" class="btn-scan">▶️ Start Live Attendance (15s Scan)</a>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Registration No.</th>
+                    <th>Student Name</th>
+                    <th>Time Scanned</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log[0] }}</td>
+                    <td>{{ log[1] }}</td>
+                    <td>{{ log[2] }}</td>
+                    <td class="{% if log[3] == 'Present' %}status-present{% else %}status-absent{% endif %}">{{ log[3] }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; color: #7f8c8d;">No attendance records found for today yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

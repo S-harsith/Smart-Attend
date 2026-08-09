@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Campus Attendance</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 350px; text-align: center; }
+        .login-box h2 { color: #2c3e50; margin-bottom: 20px; font-size: 24px; }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        .input-group label { display: block; color: #7f8c8d; margin-bottom: 5px; font-size: 14px; font-weight: bold; }
+        .input-group input { width: 95%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .btn-login { background-color: #3498db; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .btn-login:hover { background-color: #2980b9; }
+        .error-message { color: #e74c3c; font-size: 14px; margin-bottom: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <h2>🎓 Host Portal Login</h2>
+        
+        <!-- This will show the red error text if they type the wrong password -->
+        {% if error_message %}
+            <div class="error-message">{{ error_message }}</div>
+        {% endif %}
+        
+        <form action="/login" method="POST">
+            <div class="input-group">
+                <label>Admin Username</label>
+                <input type="text" name="username" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" required>
+            </div>
+            <button type="submit" class="btn-login">Secure Login</button>
+        </form>
+    </div>
+
+</body>
+</html>

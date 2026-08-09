@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Student - Host Portal</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px;}
+        .form-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 450px; }
+        h2 { color: #333; text-align: center; margin-bottom: 20px; }
+        label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 10px; }
+        input[type="text"], input[type="email"], select { width: 95%; padding: 10px; margin: 8px 0 15px 0; border: 1px solid #ccc; border-radius: 4px; }
+        
+        /* Camera Styles */
+        .camera-box { text-align: center; margin-bottom: 20px; background: #eee; padding: 10px; border-radius: 8px;}
+        video { width: 100%; border-radius: 4px; background: #000; }
+        .btn-capture { background-color: #3498db; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; font-size: 14px;}
+        .btn-capture:hover { background-color: #2980b9; }
+        .photo-status { font-size: 13px; color: #555; margin-top: 8px; font-weight: bold; }
+        
+        /* Submit Button */
+        .btn-submit { background-color: #95a5a6; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; cursor: not-allowed; font-size: 16px; font-weight: bold; transition: 0.3s;}
+        .cancel-link { display: block; text-align: center; margin-top: 15px; color: #e74c3c; text-decoration: none; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Register New Student</h2>
+    
+    <form action="/register" method="POST" id="registerForm">
+        <label>Registration Number</label>
+        <input type="text" name="regno" required>
+
+        <label>Full Name</label>
+        <input type="text" name="name" required>
+
+        <label>Department</label>
+        <input type="text" name="department" required>
+
+        <label>Gender</label>
+        <select name="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+
+        <label>Email Address</label>
+        <input type="email" name="email">
+
+        <label>Guardian Name</label>
+        <input type="text" name="guardian">
+
+        <!-- THE CAMERA SECTION -->
+        <div class="camera-box">
+            <label style="margin-top: 0;">Manual Face Capture (Need 5 Angles)</label>
+            <video id="video" autoplay></video>
+            <button type="button" id="captureBtn" class="btn-capture">📷 Capture Photo (0/5)</button>
+            <div id="statusText" class="photo-status">Please capture 5 different angles.</div>
+            <canvas id="canvas" style="display:none;"></canvas>
+        </div>
+
+        <!-- Hidden inputs to store the 5 image files -->
+        <input type="hidden" name="image1" id="image1">
+        <input type="hidden" name="image2" id="image2">
+        <input type="hidden" name="image3" id="image3">
+        <input type="hidden" name="image4" id="image4">
+        <input type="hidden" name="image5" id="image5">
+
+        <button type="submit" class="btn-submit" id="submitBtn" disabled>Save Student & Faces</button>
+    </form>
+    
+    <a href="/manage" class="cancel-link">Cancel and Go Back</a>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('captureBtn');
+    const statusText = document.getElementById('statusText');
+    const submitBtn = document.getElementById('submitBtn');
+    let captureCount = 0;
+
+    // Turn on the laptop camera
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => { video.srcObject = stream; })
+        .catch(err => { statusText.innerHTML = "<span style='color:red;'>Camera access denied or error.</span>"; });
+
+    // Handle the manual photo clicking
+    captureBtn.addEventListener('click', () => {
+        if (captureCount < 5) {
+            captureCount++;
+            
+            // Draw the current video frame to the hidden canvas
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // Convert the image to text data and store it in the hidden inputs
+            const imageData = canvas.toDataURL('image/jpeg');
+            document.getElementById('image' + captureCount).value = imageData;
+            
+            // Update the button text
+            captureBtn.innerText = `📷 Capture Photo (${captureCount}/5)`;
+            
+            // If we hit 5 photos, lock the camera button and unlock the Save button
+            if (captureCount === 5) {
+                captureBtn.disabled = true;
+                captureBtn.style.backgroundColor = "#7f8c8d";
+                captureBtn.innerText = "✅ 5 Photos Captured!";
+                statusText.style.color = "#2ecc71";
+                statusText.innerText = "All angles captured. You can now save.";
+                
+                submitBtn.disabled = false;
+                submitBtn.style.cursor = "pointer";
+                submitBtn.style.backgroundColor = "#2ecc71";
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
