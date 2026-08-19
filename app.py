@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.secret_key = "super_secure_campus_key_123"
 
 # IMPORTANT: Replace with your actual MySQL root password
-db_password = "harsith2005"
+db_password = "*********"
 
 def get_db_connection():
     try:
@@ -21,7 +21,7 @@ def get_db_connection():
             host="localhost",
             user="root",
             password=db_password,
-            database="campus_attendance"
+            database="*************"
         )
         return connection
     except Exception as e:
