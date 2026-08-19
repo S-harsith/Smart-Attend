@@ -11,18 +11,18 @@ from email.mime.multipart import MIMEMultipart
 
 # --- CONFIGURATION ---
 # IMPORTANT: Replace with your actual MySQL root password
-db_password = "harsith2005"
+db_password = "**************"
 
 # IMPORTANT: Email Credentials
-SENDER_EMAIL = "harsith1033@gmail.com"
-SENDER_PASSWORD = "qvlqzucoaajxbcrl"
+SENDER_EMAIL = "**************"
+SENDER_PASSWORD = "************"
 
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
         user="root",
         password=db_password,
-        database="campus_attendance"
+        database="*************"
     )
 
 def send_absent_email(student_name, guardian_email, date_str):
