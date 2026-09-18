@@ -11,7 +11,6 @@ from email.mime.multipart import MIMEMultipart
 
 db_password = "**************"
 
-# IMPORTANT: Email Credentials
 SENDER_EMAIL = "**************"
 SENDER_PASSWORD = "************"
 
