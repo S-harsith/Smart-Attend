@@ -9,8 +9,6 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-# --- CONFIGURATION ---
-# IMPORTANT: Replace with your actual MySQL root password
 db_password = "**************"
 
 # IMPORTANT: Email Credentials
