@@ -12,7 +12,6 @@ from datetime import date
 app = Flask(__name__)
 app.secret_key = "super_secure_campus_key_123"
 
-# IMPORTANT: Replace with your actual MySQL root password
 db_password = "*********"
 
 def get_db_connection():
@@ -27,21 +26,17 @@ def get_db_connection():
     except Exception as e:
         return None
 
-# Route 1: The main entry point - send directly to Login
 @app.route('/')
 def index():
     return redirect(url_for('login'))
 
-# Route 2: Register a New Student (Text Data Only)
-# Route: Register a New Student (Text Data + Manual Photos)
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    # --- SECURITY LOCK ---
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
     
     if request.method == 'POST':
-        # Grab all the text data typed into the form
         regno = request.form.get('regno')
         name = request.form.get('name')
         department = request.form.get('department')
@@ -51,12 +46,10 @@ def register():
         
         encodings = []
         
-        # Grab the 5 photos, decode them, and extract facial measurements
         for i in range(1, 6):
             image_data = request.form.get(f'image{i}')
             if image_data:
                 try:
-                    # Strip the HTML prefix to get the raw image code
                     encoded_data = image_data.split(',')[1]
                     nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
                     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
@@ -64,13 +57,11 @@ def register():
                     rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                     faces = face_recognition.face_encodings(rgb_img)
                     
-                   # If the AI actually sees a face, save the mathematical encoding
                     if len(faces) > 0:
                         encodings.append(faces[0].tolist())
                 except Exception as e:
                     print(f"Image Processing Error: {e}")
 
-        # Security Check: Did we get a clear face in the photos?
         if len(encodings) == 0:
             return "Error: No clear face detected in the photos. Please go back and try again."
         
@@ -78,7 +69,6 @@ def register():
             conn = get_db_connection()
             cursor = conn.cursor()
             
-            # Securely insert the text data AND the face encodings into MySQL
             cursor.execute(
                 "INSERT INTO students (regno, name, department, gender, email, guardian_name, face_encodings) VALUES (%s, %s, %s, %s, %s, %s, %s)", 
                 (regno, name, department, gender, email, guardian, json.dumps(encodings))
@@ -88,19 +78,14 @@ def register():
             cursor.close()
             conn.close()
             
-            # Success! Redirect back to the management table
             return redirect(url_for('manage'))
             
         except Exception as e:
             return f"Database Error: {e}"
             
-    # If they just clicked the button, show them the blank form and camera
     return render_template('register.html')
-# Route 3: The Live Attendance Dashboard
 @app.route('/dashboard')
 def dashboard():
-    # --- THE NEW SECURITY LOCK ---
-    # If the admin is NOT logged in, instantly send them back to the login page
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
     # -----------------------------
