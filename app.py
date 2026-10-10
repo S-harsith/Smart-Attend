@@ -94,22 +94,18 @@ def dashboard():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Get today's date to filter the database
         today = date.today().strftime("%Y-%m-%d")
         
-        # Fetch all records for today
         cursor.execute("SELECT regno, name, time, status FROM attendance_logs WHERE date = %s ORDER BY time DESC", (today,))
         logs = cursor.fetchall()
         
         cursor.close()
         conn.close()
         
-        # Send the data to a new HTML page
         return render_template('dashboard.html', logs=logs, today_date=today)
     except Exception as e:
         return f"Database Error: {e}"
     
-# Route 4: The Admin Login Page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -120,7 +116,6 @@ def login():
             conn = get_db_connection()
             cursor = conn.cursor()
             
-            # Check if the username and password match our database
             cursor.execute("SELECT * FROM admins WHERE username = %s AND password = %s", (username, password))
             admin = cursor.fetchone()
             
