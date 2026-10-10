@@ -12,7 +12,6 @@
         input[type="text"], input[type="email"], select { width: 95%; padding: 10px; margin: 8px 0 15px 0; border: 1px solid #ccc; border-radius: 4px; }
         input[readonly] { background-color: #e9ecef; cursor: not-allowed; }
         
-        /* Camera Styles */
         .camera-box { text-align: center; margin-bottom: 20px; background: #e8f4f8; padding: 15px; border-radius: 8px; border: 1px solid #b3d4fc;}
         video { width: 100%; border-radius: 4px; background: #000; }
         .btn-capture { background-color: #3498db; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; font-size: 14px;}
@@ -52,7 +51,6 @@
         <label>Guardian Name</label>
         <input type="text" name="guardian" value="{{ student[5] }}">
 
-        <!-- OPTIONAL CAMERA SECTION -->
         <div class="camera-box">
             <label style="margin-top: 0; color: #2980b9;">Optional: Update Face Data</label>
             <p style="font-size: 12px; color: #666; margin-top: 0;">Only use this if you want to overwrite their existing photos.</p>
@@ -68,7 +66,6 @@
         <input type="hidden" name="image4" id="image4">
         <input type="hidden" name="image5" id="image5">
 
-        <!-- Note: Button is enabled by default so text-only edits work -->
         <button type="submit" class="btn-submit" id="submitBtn">Update Student</button>
     </form>
     
@@ -88,7 +85,6 @@
         .catch(err => { statusText.innerHTML = "<span style='color:red;'>Camera access denied. Text updates only.</span>"; });
 
     captureBtn.addEventListener('click', () => {
-        // If they start taking pictures, lock the submit button so they don't submit half a face profile
         if (captureCount === 0) {
             submitBtn.disabled = true;
             submitBtn.style.backgroundColor = "#95a5a6";
@@ -118,7 +114,6 @@
                 statusText.style.color = "#2ecc71";
                 statusText.innerText = "New face data ready to save.";
                 
-                // Unlock the submit button again
                 submitBtn.disabled = false;
                 submitBtn.style.cursor = "pointer";
                 submitBtn.style.backgroundColor = "#f39c12";
