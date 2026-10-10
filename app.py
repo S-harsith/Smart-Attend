@@ -171,16 +171,13 @@ def delete_student(regno):
         cursor.close()
         conn.close()
         
-        # Send them right back to the management table
         return redirect(url_for('manage'))
     
     except Exception as e:
         return f"Database Error: {e}"
     
-# Route: Edit an existing student's details and/or update their face photos
 @app.route('/edit/<regno>', methods=['GET', 'POST'])
 def edit_student(regno):
-    # --- SECURITY LOCK ---
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
     
@@ -191,7 +188,6 @@ def edit_student(regno):
         email = request.form.get('email')
         guardian = request.form.get('guardian')
         
-        # Check if the admin decided to take new photos
         encodings = []
         has_new_photos = False
         
@@ -217,17 +213,14 @@ def edit_student(regno):
             cursor = conn.cursor()
             
             if has_new_photos:
-                # Security Check for the new photos
                 if len(encodings) == 0:
                     return "Error: No clear face detected in the new photos. Please go back and try again."
                 
-                # Update BOTH text details and the face encodings
                 cursor.execute(
                     "UPDATE students SET name = %s, department = %s, gender = %s, email = %s, guardian_name = %s, face_encodings = %s WHERE regno = %s", 
                     (name, department, gender, email, guardian, json.dumps(encodings), regno)
                 )
             else:
-                # Update ONLY the text details (leave the old faces untouched)
                 cursor.execute(
                     "UPDATE students SET name = %s, department = %s, gender = %s, email = %s, guardian_name = %s WHERE regno = %s", 
                     (name, department, gender, email, guardian, regno)
@@ -242,7 +235,6 @@ def edit_student(regno):
         except Exception as e:
             return f"Database Error: {e}"
             
-    # GET: Fetch the student's current details to pre-fill the form
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -260,23 +252,18 @@ def edit_student(regno):
     except Exception as e:
         return f"Database Error: {e}"
     
-# Route: Trigger the live face scanner
 @app.route('/start_scanner')
 def start_scanner():
-    # --- SECURITY LOCK ---
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
     
     try:
-        # Use sys.executable to force it to use the virtual environment
         subprocess.run([sys.executable, 'scanner.py'])
         
-        # Once the 15-second scanner finishes and closes, refresh the dashboard
         return redirect(url_for('dashboard'))
         
     except Exception as e:
         return f"Error running scanner: {e}"
 
-# THESE TWO LINES MUST BE AT THE VERY BOTTOM OF THE FILE
 if __name__ == '__main__':
     app.run(debug=True)
