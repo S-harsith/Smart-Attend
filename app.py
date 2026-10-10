@@ -123,9 +123,7 @@ def login():
             conn.close()
             
             if admin:
-                # Grant the VIP pass
                 session['admin_logged_in'] = True
-                # Send them securely to the dashboard
                 return redirect(url_for('dashboard'))
             else:
                 return render_template('login.html', error_message="Invalid username or password.")
@@ -133,19 +131,14 @@ def login():
         except Exception as e:
             return render_template('login.html', error_message=f"Database Error: {e}")
             
-    # If they just navigated to the page, show them the login form
     return render_template('login.html')
 
-# Route 5: Logout to destroy the session
 @app.route('/logout')
 def logout():
-    # This securely shreds the VIP pass
     session.pop('admin_logged_in', None)
     return redirect(url_for('login'))
-# Route 6: The Manage Students Page (Host Portal)
 @app.route('/manage')
 def manage():
-    # --- SECURITY LOCK ---
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
     
@@ -153,7 +146,6 @@ def manage():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Fetch all registered students from the database
         cursor.execute("SELECT regno, name, department, gender, email, guardian_name FROM students")
         students = cursor.fetchall()
         
@@ -164,10 +156,8 @@ def manage():
     
     except Exception as e:
         return f"Database Error: {e}"
-# Route 7: Delete a student record
 @app.route('/delete/<regno>')
 def delete_student(regno):
-    # --- SECURITY LOCK ---
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
     
@@ -175,7 +165,6 @@ def delete_student(regno):
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Permanently erase the student using their unique registration number
         cursor.execute("DELETE FROM students WHERE regno = %s", (regno,))
         conn.commit()
         
