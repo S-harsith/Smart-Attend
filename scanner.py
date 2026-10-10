@@ -33,7 +33,6 @@ def send_absent_email(student_name, guardian_email, date_str):
         body = f"Dear Guardian,\n\nThis is an automated alert from the Campus Attendance System. {student_name} was marked ABSENT for their session on {date_str}.\n\nPlease ensure everything is okay.\n\nThank you."
         msg.attach(MIMEText(body, 'plain'))
 
-        # Connect to Gmail's server and send
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(SENDER_EMAIL, SENDER_PASSWORD)
@@ -42,16 +41,14 @@ def send_absent_email(student_name, guardian_email, date_str):
     except Exception as e:
         print(f"Email Error: {e}")
 
-# 1. Load the "Brain" - Fetch all registered faces and emails from MySQL
 known_face_encodings = []
 known_face_names = []
 known_face_regnos = []
-student_contact_info = {} # Store emails to use later if absent
+student_contact_info = {} 
 
 try:
     conn = get_db_connection()
     cursor = conn.cursor()
-    # We now fetch the email as well!
     cursor.execute("SELECT regno, name, email, face_encodings FROM students")
     
     for (regno, name, email, encodings_json) in cursor.fetchall():
@@ -98,12 +95,10 @@ def log_attendance(regno, name, status="Present"):
             cursor.close()
             db.close()
 
-# 2. Open the "Eyes" and start the 15-second timer
 video_capture = cv2.VideoCapture(0)
 start_time = time.time()
 
 while True:
-    # Check if 15 seconds have passed
     if time.time() - start_time > 15:
         break
 
