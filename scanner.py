@@ -133,7 +133,6 @@ while True:
         cv2.rectangle(frame, (left, bottom - 35), (right, bottom), color, cv2.FILLED)
         cv2.putText(frame, name, (left + 6, bottom - 6), cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
 
-    # Calculate remaining time and display it on the camera feed
     time_left = int(15 - (time.time() - start_time))
     cv2.putText(frame, f"Time left: {time_left}s", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     
@@ -145,15 +144,12 @@ while True:
 video_capture.release()
 cv2.destroyAllWindows()
 
-# 3. The Absentee Processing Phase
 
 for regno, info in student_contact_info.items():
     if regno not in already_marked_this_session:
         name = info['name']
         email = info['email']
         
-        # Log them as absent in MySQL
         log_attendance(regno, name, status="Absent")
         
-        # Send the automatic email
         send_absent_email(name, email, current_date)
