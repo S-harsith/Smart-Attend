@@ -88,7 +88,6 @@ def register():
 def dashboard():
     if not session.get('admin_logged_in'):
         return redirect(url_for('login'))
-    # -----------------------------
 
     try:
         conn = get_db_connection()
