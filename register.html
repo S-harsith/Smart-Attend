@@ -81,25 +81,20 @@
         .then(stream => { video.srcObject = stream; })
         .catch(err => { statusText.innerHTML = "<span style='color:red;'>Camera access denied or error.</span>"; });
 
-    // Handle the manual photo clicking
     captureBtn.addEventListener('click', () => {
         if (captureCount < 5) {
             captureCount++;
             
-            // Draw the current video frame to the hidden canvas
             const context = canvas.getContext('2d');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            // Convert the image to text data and store it in the hidden inputs
             const imageData = canvas.toDataURL('image/jpeg');
             document.getElementById('image' + captureCount).value = imageData;
             
-            // Update the button text
             captureBtn.innerText = `📷 Capture Photo (${captureCount}/5)`;
             
-            // If we hit 5 photos, lock the camera button and unlock the Save button
             if (captureCount === 5) {
                 captureBtn.disabled = true;
                 captureBtn.style.backgroundColor = "#7f8c8d";
