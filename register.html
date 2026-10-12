@@ -11,14 +11,12 @@
         label { font-weight: bold; font-size: 14px; color: #555; display: block; margin-top: 10px; }
         input[type="text"], input[type="email"], select { width: 95%; padding: 10px; margin: 8px 0 15px 0; border: 1px solid #ccc; border-radius: 4px; }
         
-        /* Camera Styles */
         .camera-box { text-align: center; margin-bottom: 20px; background: #eee; padding: 10px; border-radius: 8px;}
         video { width: 100%; border-radius: 4px; background: #000; }
         .btn-capture { background-color: #3498db; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; font-weight: bold; font-size: 14px;}
         .btn-capture:hover { background-color: #2980b9; }
         .photo-status { font-size: 13px; color: #555; margin-top: 8px; font-weight: bold; }
         
-        /* Submit Button */
         .btn-submit { background-color: #95a5a6; color: white; border: none; padding: 12px; width: 100%; border-radius: 4px; cursor: not-allowed; font-size: 16px; font-weight: bold; transition: 0.3s;}
         .cancel-link { display: block; text-align: center; margin-top: 15px; color: #e74c3c; text-decoration: none; font-size: 14px; }
     </style>
@@ -51,7 +49,6 @@
         <label>Guardian Name</label>
         <input type="text" name="guardian">
 
-        <!-- THE CAMERA SECTION -->
         <div class="camera-box">
             <label style="margin-top: 0;">Manual Face Capture (Need 5 Angles)</label>
             <video id="video" autoplay></video>
@@ -60,7 +57,6 @@
             <canvas id="canvas" style="display:none;"></canvas>
         </div>
 
-        <!-- Hidden inputs to store the 5 image files -->
         <input type="hidden" name="image1" id="image1">
         <input type="hidden" name="image2" id="image2">
         <input type="hidden" name="image3" id="image3">
@@ -81,7 +77,6 @@
     const submitBtn = document.getElementById('submitBtn');
     let captureCount = 0;
 
-    // Turn on the laptop camera
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => { video.srcObject = stream; })
         .catch(err => { statusText.innerHTML = "<span style='color:red;'>Camera access denied or error.</span>"; });
